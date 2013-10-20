@@ -1,0 +1,42 @@
+doctype html
+html
+  head
+    title XBMC
+    link rel="stylesheet" href=asset_path("xbmc.css")
+    script src=asset_path("xbmc.js")
+  body
+    .navbar.navbar-default.navbar-fixed-top
+      .container
+        .navbar-header
+          button.navbar-toggle type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse"
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand href="#" XBMC
+        .collapse.navbar-collapse.navbar-ex1-collapse
+          ul.nav.navbar-nav
+            li data-route="movies"
+              a href="#movies" Movies
+            li data-route="tv"
+              a href="#tv" TV
+          ul.nav.navbar-nav.navbar-right
+            li data-route="rpcDocumentation"
+              a href="#rpc-documentation" Docs
+    .navbar.navbar-inverse.navbar-fixed-bottom
+      .container
+        ul.nav.navbar-nav.navbar-left
+          li
+            a onclick="XBMC.rpc('Player.PlayPause', 1, 'play')"
+              i.glyphicon.glyphicon-play
+          li
+            a onclick="XBMC.rpc('Player.PlayPause', 1, 'pause')"
+              i.glyphicon.glyphicon-pause
+          li
+            a onclick="XBMC.rpc('Player.Stop', 1)"
+              i.glyphicon.glyphicon-stop
+        ul.nav.navbar-nav.navbar-right
+          li
+            a onclick="XBMC.rpc('Player.SetSubtitle', 1, 'off')"
+              i.glyphicon.glyphicon-subtitles
+    .content.container
