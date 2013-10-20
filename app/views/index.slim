@@ -21,6 +21,10 @@ html
             li data-route="shows show"
               a href="#shows" TV
           ul.nav.navbar-nav.navbar-right
+            li
+              a onclick="XBMC.rpc('AudioLibrary.Scan'); XBMC.rpc('VideoLibrary.Scan')"
+                i.glyphicon.glyphicon-refresh
+
             li data-route="rpcDocumentation"
               a href="#rpc-documentation" Docs
     .navbar.navbar-inverse.navbar-fixed-bottom

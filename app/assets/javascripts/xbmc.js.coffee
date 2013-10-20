@@ -73,13 +73,28 @@ class XBMC.Router extends Backbone.Router
       $("[data-route~=#{name}]:not(.active)").addClass("active")
 
   home: ->
-    $(".content").html("<p>Home...</p>")
+    $(".content").empty()
+    XBMC.rpc("Player.GetActivePlayers")
+      .done (players) =>
+        deferreds = []
+        deferreds.push XBMC.rpc("Player.GetItem", players[0].playerid, ["title", "thumbnail", "tvshowid"])
+        deferreds.push XBMC.rpc("Playlist.GetItems", players[0].playerid, ["title", "tvshowid"])
+        deferreds.push XBMC.rpc("VideoLibrary.GetRecentlyAddedEpisodes", ["title", "tvshowid"], {start: 0, end: 12})
+        deferreds.push XBMC.rpc("VideoLibrary.GetRecentlyAddedMovies", ["title"], {start: 0, end: 12})
+        $.when(deferreds...)
+          .done ({item}, {items}, {episodes}, {movies}) =>
+            console.log arguments...
+            $(JST["home"]({item, items, episodes, movies})).appendTo(".content")
+          .then ->
+            NProgress.done()
+      .fail ->
+        NProgress.done()
 
   rpcDocumentation: (section) ->
     if $("#rpc-documentation").length
       anchor = ("/#{section}" if section)
       if (a = $("a[name='rpc-documentation#{anchor}']")).length
-        $(document.body).scrollTop(a.offset().top)
+        $(document).scrollTop(a.offset().top)
     else
       $(".content").empty()
       NProgress.start()
@@ -121,13 +136,14 @@ class XBMC.Router extends Backbone.Router
     $(".content").empty()
     NProgress.start()
     deferreds = []
-    deferreds.push XBMC.rpc("VideoLibrary.GetTVShowDetails", parseInt(id), ["title", "thumbnail", "episode", "watchedepisodes"])
+    deferreds.push XBMC.rpc("VideoLibrary.GetTVShowDetails", parseInt(id), ["title", "thumbnail", "episode", "watchedepisodes", "plot"])
     deferreds.push XBMC.rpc("VideoLibrary.GetSeasons", parseInt(id), ["season"], {}, {method: "season"})
     $.when(deferreds...)
       .done ({tvshowdetails}, {seasons}) =>
         deferreds = []
-        for {season} in seasons
-          deferreds.push XBMC.rpc("VideoLibrary.GetEpisodes", parseInt(id), season, ["title", "thumbnail", "season", "episode", "playcount"], {}, {method: "episode"})
+        if seasons
+          for {season} in seasons
+            deferreds.push XBMC.rpc("VideoLibrary.GetEpisodes", parseInt(id), season, ["title", "thumbnail", "season", "episode", "playcount"], {}, {method: "episode"})
         $.when(deferreds...)
           .done (episodes...) ->
             $(JST["show"](show: tvshowdetails, seasons: seasons, episodes: episodes)).appendTo(".content")

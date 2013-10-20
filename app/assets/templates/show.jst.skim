@@ -1,17 +1,25 @@
 .row
   .col-lg-8.col-sm-8
     h2 = @show.title
-    - for season, index in @seasons
-      h3 = season.label
-      ul data-index=index
-        - for episode in @episodes[index].episodes
-          li
-            = episode.label
-            | &nbsp;
-            - if episode.playcount
-              span.label.label-success watched
-              | &nbsp;
-            a.btn.btn-default.btn-xs onclick="XBMC.rpc('Player.Open', {episodeid: #{episode.episodeid}})"
-              i.glyphicon.glyphicon-play
+    p = @show.plot
+    - if @seasons
+      - for season, index in @seasons
+        h3 = season.label
+        table.table.table-striped
+          tbody
+            - for episode in @episodes[index].episodes
+              tr
+                td
+                  a.btn.btn-default.btn-xs onclick="XBMC.rpc('Player.Open', {episodeid: #{episode.episodeid}})"
+                    i.glyphicon.glyphicon-play
+                td width="100%"
+                  = episode.label
+                  - if episode.playcount
+                    | &nbsp;
+                    i.glyphicon.glyphicon-eye-open.text-muted
+
+    - else
+      p.text-muted No episodes.
+
   .col-lg-4.col-sm-4.hidden-xs
     img.img-thumbnail src="/image/#{encodeURIComponent(@show.thumbnail)}"

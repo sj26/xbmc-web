@@ -1,11 +1,13 @@
 h2 Movies
-ul
-  - for movie in @movies
-    li
-      a href="#movies/#{movie.movieid}" = movie.title
-      | &nbsp;
-      - if movie.playcount
-        span.label.label-success watched
-        | &nbsp;
-      a.btn.btn-default.btn-xs onclick="XBMC.rpc('Player.Open', {'movieid': #{movie.movieid}})"
-        i.glyphicon.glyphicon-play
+table.table.table-striped
+  tbody
+    - for movie in @movies
+      tr
+        td
+          a.btn.btn-default.btn-xs onclick="XBMC.rpc('Player.Open', {'movieid': #{movie.movieid}})"
+            i.glyphicon.glyphicon-play
+        td width="100%"
+          a href="#movies/#{movie.movieid}" = movie.title
+          - if movie.playcount
+            | &nbsp;
+            i.glyphicon.glyphicon-eye-open.text-muted

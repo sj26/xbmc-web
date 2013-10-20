@@ -1,0 +1,58 @@
+.row
+  .col-lg-4.col-sm-4
+    - if @item
+      h3 Now Playing
+      p
+        img.img-thumbnail src="/image/#{encodeURIComponent(@item.thumbnail)}"
+      p
+        - if @item.tvshowid
+          a href="#shows/#{@item.tvshowid}" = @item.label
+        - else if @item.movieid
+          a href="#movies/#{@item.movieid}" = @item.label
+        - else
+          = @item.label
+
+    - if @items
+      h3 Queue
+      table.table.table-striped
+        tbody
+          - for item in @items
+            tr
+              td
+                - if item.tvshowid
+                  a href="#shows/#{item.tvshowid}" = item.label
+                - else if item.movieid
+                  a href="#movies/#{item.movieid}" = item.label
+                - else
+                  = item.label
+
+  .col-lg-4.col-sm-4
+    h3 Latest Episodes
+    table.table.table-striped
+      tbody
+        - for episode in @episodes
+          tr
+            td
+              a.btn.btn-default.btn-xs onclick="XBMC.run('Player.Open', {episodeid: #{episode.episodeid}})"
+                i.glyphicon.glyphicon-play
+            td width="100%"
+              a href="#shows/#{episode.tvshowid}" = episode.title
+              - if episode.playcount
+                | &nbsp;
+                i.glyphicon.glyphicon-eye-open.text-muted
+
+  .col-lg-4.col-sm-4
+    h3 Latest Movies
+    table.table.table-striped
+      tbody
+        - for movie in @movies
+          tr
+            td
+              a.btn.btn-default.btn-xs onclick="XBMC.run('Player.Open', {movieid: #{movie.movieid}})"
+                i.glyphicon.glyphicon-play
+            td width="100%"
+              a href="#movies/#{movie.movieid}" = movie.title
+              - if movie.playcount
+                | &nbsp;
+                i.glyphicon.glyphicon-eye-open.text-muted
+
