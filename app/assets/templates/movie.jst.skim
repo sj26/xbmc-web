@@ -1,0 +1,11 @@
+.row
+  .col-lg-8.col-sm-8
+    h2.clearfix
+      = @movie.title
+    p = @movie.plot
+    .btn-toolbar
+      a.btn.btn-default onclick="XBMC.rpc('Player.Open', {'movieid': #{@movie.movieid}})"
+        i.glyphicon.glyphicon-play
+
+  .col-lg-4.col-sm-4.hidden-xs
+    img.img-thumbnail src="/image/#{encodeURIComponent(@movie.thumbnail)}"

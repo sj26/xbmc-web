@@ -1,0 +1,5 @@
+h2 TV
+ul
+  - for tvshow in @tvshows
+    li
+      a href="#shows/#{tvshow.tvshowid}" = tvshow.title

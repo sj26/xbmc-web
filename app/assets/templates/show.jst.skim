@@ -1,0 +1,17 @@
+.row
+  .col-lg-8.col-sm-8
+    h2 = @show.title
+    - for season, index in @seasons
+      h3 = season.label
+      ul data-index=index
+        - for episode in @episodes[index].episodes
+          li
+            = episode.label
+            | &nbsp;
+            - if episode.playcount
+              span.label.label-success watched
+              | &nbsp;
+            a.btn.btn-default.btn-xs onclick="XBMC.rpc('Player.Open', {episodeid: #{episode.episodeid}})"
+              i.glyphicon.glyphicon-play
+  .col-lg-4.col-sm-4.hidden-xs
+    img.img-thumbnail src="/image/#{encodeURIComponent(@show.thumbnail)}"

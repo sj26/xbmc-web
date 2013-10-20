@@ -16,10 +16,10 @@ html
           a.navbar-brand href="#" XBMC
         .collapse.navbar-collapse.navbar-ex1-collapse
           ul.nav.navbar-nav
-            li data-route="movies"
+            li data-route="movies movie"
               a href="#movies" Movies
-            li data-route="tv"
-              a href="#tv" TV
+            li data-route="shows show"
+              a href="#shows" TV
           ul.nav.navbar-nav.navbar-right
             li data-route="rpcDocumentation"
               a href="#rpc-documentation" Docs
@@ -27,10 +27,10 @@ html
       .container
         ul.nav.navbar-nav.navbar-left
           li
-            a onclick="XBMC.rpc('Player.PlayPause', 1, 'play')"
+            a onclick="XBMC.rpc('Player.PlayPause', 1, true)"
               i.glyphicon.glyphicon-play
           li
-            a onclick="XBMC.rpc('Player.PlayPause', 1, 'pause')"
+            a onclick="XBMC.rpc('Player.PlayPause', 1, false)"
               i.glyphicon.glyphicon-pause
           li
             a onclick="XBMC.rpc('Player.Stop', 1)"

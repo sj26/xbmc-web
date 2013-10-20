@@ -1,5 +1,0 @@
-h2 TV
-ul
-  - for tvshow in @tvshows
-    li
-      a href="#tv/#{tvshow.tvshowid}" = tvshow.label

@@ -17,14 +17,6 @@ $(document).on
   url: "/jsonrpc"
 
   init: ->
-    $(document.body)
-    .on "click", "[data-action=playpause]", =>
-      @rpc "Player.PlayPause", 1
-    .on "click", "[data-action=play]", =>
-      @rpc "Player.PlayPause", 1, true
-    .on "click", "[data-action=pause]", =>
-      @rpc "Player.PlayPause", 1, false
-
     @router = new XBMC.Router
 
     Backbone.history.start()
@@ -56,9 +48,13 @@ $(document).on
       contentType: "application/json"
       dataType: "json"
     .done (data, status, xhr) ->
-      deferred.resolve(data.result)
+      if data.error
+        console.log "rpc error:", [method, params...], data.error
+        deferred.reject(data.error)
+      else
+        deferred.resolve(data.result)
     .fail (xhr, status, error) ->
-      console.log "rpc error:", method, xhr, error
+      console.log "rpc error:", [method, params...], xhr, error
       deferred.reject()
     deferred.promise()
 
@@ -67,12 +63,14 @@ class XBMC.Router extends Backbone.Router
     "": "home"
     "rpc-documentation(/*anchor)": "rpcDocumentation"
     "movies": "movies"
-    "tv": "tv"
+    "movies/:movie": "movie"
+    "shows": "shows"
+    "shows/:show": "show"
 
   initialize: ->
     @on "route", (name, args) ->
-      $("[data-route!=#{name}].active").removeClass("active")
-      $("[data-route=#{name}]:not(.active)").addClass("active")
+      $(":not([data-route~=#{name}]).active").removeClass("active")
+      $("[data-route~=#{name}]:not(.active)").addClass("active")
 
   home: ->
     $(".content").html("<p>Home...</p>")
@@ -85,23 +83,57 @@ class XBMC.Router extends Backbone.Router
     else
       $(".content").empty()
       NProgress.start()
-      XBMC.rpcDescriptor().done (descriptor) =>
-        $(JST["rpc-documentation"](descriptor)).appendTo(".content")
-        NProgress.done()
-        @rpcDocumentation(section)
+      XBMC.rpcDescriptor()
+        .done (descriptor) =>
+          $(JST["rpc-documentation"](descriptor)).appendTo(".content")
+          @rpcDocumentation(section)
+        .then ->
+          NProgress.done()
 
   movies: ->
     $(".content").empty()
     NProgress.start()
-    XBMC.rpc("VideoLibrary.GetMovies").done (result) =>
-      $(JST["movies"](result)).appendTo(".content")
-      NProgress.done()
+    XBMC.rpc("VideoLibrary.GetMovies", ["title", "thumbnail", "playcount"], {}, {method: "title", ignorearticle: true})
+      .done (result) =>
+        $(JST["movies"](result)).appendTo(".content")
+      .then ->
+        NProgress.done()
 
-  tv: ->
+  movie: (id) ->
     $(".content").empty()
     NProgress.start()
-    XBMC.rpc("VideoLibrary.GetTVShows").done (result) =>
-      $(JST["tv"](result)).appendTo(".content")
-      NProgress.done()
+    XBMC.rpc("VideoLibrary.GetMovieDetails", parseInt(id), ["title", "thumbnail", "playcount", "plot"])
+      .done (result) =>
+        $(JST["movie"](movie: result.moviedetails)).appendTo(".content")
+      .then ->
+        NProgress.done()
+
+  shows: ->
+    $(".content").empty()
+    NProgress.start()
+    XBMC.rpc("VideoLibrary.GetTVShows", ["title", "thumbnail"], {}, {method: "title", ignorearticle: true})
+      .done (result) =>
+        $(JST["shows"](result)).appendTo(".content")
+      .then ->
+        NProgress.done()
+
+  show: (id) ->
+    $(".content").empty()
+    NProgress.start()
+    deferreds = []
+    deferreds.push XBMC.rpc("VideoLibrary.GetTVShowDetails", parseInt(id), ["title", "thumbnail", "episode", "watchedepisodes"])
+    deferreds.push XBMC.rpc("VideoLibrary.GetSeasons", parseInt(id), ["season"], {}, {method: "season"})
+    $.when(deferreds...)
+      .done ({tvshowdetails}, {seasons}) =>
+        deferreds = []
+        for {season} in seasons
+          deferreds.push XBMC.rpc("VideoLibrary.GetEpisodes", parseInt(id), season, ["title", "thumbnail", "season", "episode", "playcount"], {}, {method: "episode"})
+        $.when(deferreds...)
+          .done (episodes...) ->
+            $(JST["show"](show: tvshowdetails, seasons: seasons, episodes: episodes)).appendTo(".content")
+          .then ->
+            NProgress.done()
+      .fail ->
+        NProgress.done()
 
 $ -> XBMC.init()

@@ -2,6 +2,10 @@ h2 Movies
 ul
   - for movie in @movies
     li
-      a href="#movies/#{movie.movieid}" = movie.label
-      a.btn.btn-default onclick="XBMC.rpc('Player.Open', {'movieid': #{movie.movieid}})"
+      a href="#movies/#{movie.movieid}" = movie.title
+      | &nbsp;
+      - if movie.playcount
+        span.label.label-success watched
+        | &nbsp;
+      a.btn.btn-default.btn-xs onclick="XBMC.rpc('Player.Open', {'movieid': #{movie.movieid}})"
         i.glyphicon.glyphicon-play
