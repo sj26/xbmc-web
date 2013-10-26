@@ -49,12 +49,12 @@ $(document).on
       dataType: "json"
     .done (data, status, xhr) ->
       if data.error
-        console.log "rpc error:", [method, params...], data.error
+        console?.log "rpc error:", [method, params...], data.error
         deferred.reject(data.error)
       else
         deferred.resolve(data.result)
     .fail (xhr, status, error) ->
-      console.log "rpc error:", [method, params...], xhr, error
+      console?.log "rpc error:", [method, params...], xhr, error
       deferred.reject()
     deferred.promise()
 
@@ -83,7 +83,6 @@ class XBMC.Router extends Backbone.Router
         deferreds.push XBMC.rpc("VideoLibrary.GetRecentlyAddedMovies", ["title"], {start: 0, end: 12})
         $.when(deferreds...)
           .done ({item}, {items}, {episodes}, {movies}) =>
-            console.log arguments...
             $(JST["home"]({item, items, episodes, movies})).appendTo(".content")
           .then ->
             NProgress.done()
