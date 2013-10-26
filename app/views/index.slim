@@ -13,34 +13,43 @@ html
             span.icon-bar
             span.icon-bar
             span.icon-bar
+
           a.navbar-brand href="#" XBMC
+
         .collapse.navbar-collapse.navbar-ex1-collapse
           ul.nav.navbar-nav
             li data-route="movies movie"
               a href="#movies" Movies
             li data-route="shows show"
               a href="#shows" TV
+
           ul.nav.navbar-nav.navbar-right
             li
               a onclick="XBMC.rpc('AudioLibrary.Scan'); XBMC.rpc('VideoLibrary.Scan')"
                 i.glyphicon.glyphicon-refresh
-
             li data-route="rpcDocumentation"
               a href="#rpc-documentation" Docs
+
     .navbar.navbar-inverse.navbar-fixed-bottom
       .container
         ul.nav.navbar-nav.navbar-left
           li
-            a onclick="XBMC.rpc('Player.PlayPause', 1, true)"
-              i.glyphicon.glyphicon-play
+            a onclick="XBMC.rpc('Player.GoTo', 1, 'previous')"
+              i.glyphicon.glyphicon-backward
           li
-            a onclick="XBMC.rpc('Player.PlayPause', 1, false)"
+            a onclick="XBMC.rpc('Player.PlayPause', 1)"
+              i.glyphicon.glyphicon-play
               i.glyphicon.glyphicon-pause
           li
             a onclick="XBMC.rpc('Player.Stop', 1)"
               i.glyphicon.glyphicon-stop
+          li
+            a onclick="XBMC.rpc('Player.GoTo', 1, 'next')"
+              i.glyphicon.glyphicon-forward
+
         ul.nav.navbar-nav.navbar-right
           li
             a onclick="XBMC.rpc('Player.SetSubtitle', 1, 'off')"
               i.glyphicon.glyphicon-subtitles
+
     .content.container

@@ -1,58 +1,79 @@
 .row
   .col-lg-4.col-sm-4
     - if @item
-      h3 Now Playing
-      p
-        img.img-thumbnail src="/image/#{encodeURIComponent(@item.thumbnail)}"
-      p
-        - if @item.tvshowid
-          a href="#shows/#{@item.tvshowid}" = @item.label
-        - else if @item.movieid
-          a href="#movies/#{@item.movieid}" = @item.label
-        - else
-          = @item.label
+      .now-playing
+        h3 Now Playing
+        p
+          img.img-thumbnail src="/image/#{encodeURIComponent(@item.thumbnail)}"
+        p
+          - if @item.tvshowid
+            span.text-muted #{@item.season}x#{@item.episode}
+            | &nbsp;
+            a href="#shows/#{@item.tvshowid}" = @item.title
+            - if @item.playcount
+              | &nbsp;
+              i.glyphicon.glyphicon-eye-open.text-muted title="Watched"
+            br
+            span.text-muted = @item.showtitle
+          - else if @item.movieid
+            a href="#movies/#{@item.movieid}" = @item.label
+          - else
+            = @item.label
 
     - if @items
-      h3 Queue
+      .queue
+        h3 Queue
+        table.table.table-striped
+          tbody
+            - for item in @items
+              tr
+                td
+                  - if item.tvshowid
+                    span.text-muted #{item.season}x#{item.episode}
+                    | &nbsp;
+                    a href="#shows/#{item.tvshowid}" = item.title
+                    - if item.playcount
+                      | &nbsp;
+                      i.glyphicon.glyphicon-eye-open.text-muted title="Watched"
+                    br
+                    span.text-muted = item.showtitle
+                  - else if item.movieid
+                    a href="#movies/#{item.movieid}" = item.label
+                  - else
+                    = item.label
+
+  .col-lg-4.col-sm-4
+    .latest-episodes
+      h3 Latest Episodes
       table.table.table-striped
         tbody
-          - for item in @items
+          - for episode in @episodes
             tr
               td
-                - if item.tvshowid
-                  a href="#shows/#{item.tvshowid}" = item.label
-                - else if item.movieid
-                  a href="#movies/#{item.movieid}" = item.label
-                - else
-                  = item.label
+                a.btn.btn-default.btn-xs onclick="XBMC.run('Player.Open', {episodeid: #{episode.episodeid}})"
+                  i.glyphicon.glyphicon-play
+              td width="100%"
+                span.text-muted #{episode.season}x#{episode.episode}
+                | &nbsp;
+                a href="#shows/#{episode.tvshowid}" = episode.title
+                - if episode.playcount
+                  | &nbsp;
+                  i.glyphicon.glyphicon-eye-open.text-muted title="Watched"
+                br
+                span.text-muted = episode.showtitle
 
   .col-lg-4.col-sm-4
-    h3 Latest Episodes
-    table.table.table-striped
-      tbody
-        - for episode in @episodes
-          tr
-            td
-              a.btn.btn-default.btn-xs onclick="XBMC.run('Player.Open', {episodeid: #{episode.episodeid}})"
-                i.glyphicon.glyphicon-play
-            td width="100%"
-              a href="#shows/#{episode.tvshowid}" = episode.title
-              - if episode.playcount
-                | &nbsp;
-                i.glyphicon.glyphicon-eye-open.text-muted
-
-  .col-lg-4.col-sm-4
-    h3 Latest Movies
-    table.table.table-striped
-      tbody
-        - for movie in @movies
-          tr
-            td
-              a.btn.btn-default.btn-xs onclick="XBMC.run('Player.Open', {movieid: #{movie.movieid}})"
-                i.glyphicon.glyphicon-play
-            td width="100%"
-              a href="#movies/#{movie.movieid}" = movie.title
-              - if movie.playcount
-                | &nbsp;
-                i.glyphicon.glyphicon-eye-open.text-muted
-
+    .latest-movies
+      h3 Latest Movies
+      table.table.table-striped
+        tbody
+          - for movie in @movies
+            tr
+              td
+                a.btn.btn-default.btn-xs onclick="XBMC.run('Player.Open', {movieid: #{movie.movieid}})"
+                  i.glyphicon.glyphicon-play
+              td width="100%"
+                a href="#movies/#{movie.movieid}" = movie.title
+                - if movie.playcount
+                  | &nbsp;
+                  i.glyphicon.glyphicon-eye-open.text-muted title="Watched"

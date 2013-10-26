@@ -10,4 +10,4 @@ table.table.table-striped
           a href="#movies/#{movie.movieid}" = movie.title
           - if movie.playcount
             | &nbsp;
-            i.glyphicon.glyphicon-eye-open.text-muted
+            i.glyphicon.glyphicon-eye-open.text-muted title="Watched"

@@ -2,6 +2,9 @@
   .col-lg-8.col-sm-8
     h2.clearfix
       = @movie.title
+      - if @movie.playcount
+        | &nbsp;
+        i.glyphicon.glyphicon-eye-open.text-muted title="Watched"
     p = @movie.plot
     .btn-toolbar
       a.btn.btn-default onclick="XBMC.rpc('Player.Open', {'movieid': #{@movie.movieid}})"

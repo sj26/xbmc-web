@@ -77,10 +77,10 @@ class XBMC.Router extends Backbone.Router
     XBMC.rpc("Player.GetActivePlayers")
       .done (players) =>
         deferreds = []
-        deferreds.push XBMC.rpc("Player.GetItem", players[0].playerid, ["title", "thumbnail", "tvshowid"])
-        deferreds.push XBMC.rpc("Playlist.GetItems", players[0].playerid, ["title", "tvshowid"])
-        deferreds.push XBMC.rpc("VideoLibrary.GetRecentlyAddedEpisodes", ["title", "tvshowid"], {start: 0, end: 12})
-        deferreds.push XBMC.rpc("VideoLibrary.GetRecentlyAddedMovies", ["title"], {start: 0, end: 12})
+        deferreds.push XBMC.rpc("Player.GetItem", players[0].playerid, ["title", "thumbnail", "tvshowid", "showtitle", "season", "episode", "playcount", "resume"])
+        deferreds.push XBMC.rpc("Playlist.GetItems", players[0].playerid, ["title", "tvshowid", "showtitle", "season", "episode", "playcount", "resume"])
+        deferreds.push XBMC.rpc("VideoLibrary.GetRecentlyAddedEpisodes", ["title", "tvshowid", "showtitle", "season", "episode", "playcount", "resume"], {start: 0, end: 10})
+        deferreds.push XBMC.rpc("VideoLibrary.GetRecentlyAddedMovies", ["title", "playcount", "resume"], {start: 0, end: 10})
         $.when(deferreds...)
           .done ({item}, {items}, {episodes}, {movies}) =>
             $(JST["home"]({item, items, episodes, movies})).appendTo(".content")
@@ -107,7 +107,7 @@ class XBMC.Router extends Backbone.Router
   movies: ->
     $(".content").empty()
     NProgress.start()
-    XBMC.rpc("VideoLibrary.GetMovies", ["title", "thumbnail", "playcount"], {}, {method: "title", ignorearticle: true})
+    XBMC.rpc("VideoLibrary.GetMovies", ["title", "thumbnail", "playcount", "resume"], {}, {method: "title", ignorearticle: true})
       .done (result) =>
         $(JST["movies"](result)).appendTo(".content")
       .then ->
@@ -116,7 +116,7 @@ class XBMC.Router extends Backbone.Router
   movie: (id) ->
     $(".content").empty()
     NProgress.start()
-    XBMC.rpc("VideoLibrary.GetMovieDetails", parseInt(id), ["title", "thumbnail", "playcount", "plot"])
+    XBMC.rpc("VideoLibrary.GetMovieDetails", parseInt(id), ["title", "thumbnail", "playcount", "resume", "plot"])
       .done (result) =>
         $(JST["movie"](movie: result.moviedetails)).appendTo(".content")
       .then ->
@@ -142,7 +142,7 @@ class XBMC.Router extends Backbone.Router
         deferreds = []
         if seasons
           for {season} in seasons
-            deferreds.push XBMC.rpc("VideoLibrary.GetEpisodes", parseInt(id), season, ["title", "thumbnail", "season", "episode", "playcount"], {}, {method: "episode"})
+            deferreds.push XBMC.rpc("VideoLibrary.GetEpisodes", parseInt(id), season, ["title", "thumbnail", "season", "episode", "playcount", "resume"], {}, {method: "episode"})
         $.when(deferreds...)
           .done (episodes...) ->
             $(JST["show"](show: tvshowdetails, seasons: seasons, episodes: episodes)).appendTo(".content")
