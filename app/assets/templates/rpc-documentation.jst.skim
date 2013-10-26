@@ -6,14 +6,20 @@ article#rpc-documentation
   hr
 
   ul.nav.nav-pills
-    li <a href="#rpc-documentation/types">Types</a>
-    li <a href="#rpc-documentation/methods">Methods</a>
-    li <a href="#rpc-documentation/notifications">Notifications</a>
+    li: a href="#rpc-documentation/types" Types
+    li: a href="#rpc-documentation/methods" Methods
+    li: a href="#rpc-documentation/notifications" Notifications
 
   hr
 
   - if @types
     h3 <a name="rpc-documentation/types"></a> Types
+
+    ul.clearfix
+      - for name, type of @types
+        li.col-lg-4.col-sm-6: a href="#rpc-documentation/types/#{name}" = name
+    hr
+
     - for name, type of @types
       h4 <a name="rpc-documentation/types/#{name}"></a> #{name} <span class="label label-success">type</span>
       pre = JSON.stringify(_(type).omit("id"), null, "  ")
@@ -21,6 +27,11 @@ article#rpc-documentation
 
   - if @methods
     h3 <a name="rpc-documentation/methods"></a> Methods
+
+    ul.clearfix
+      - for name, method of @methods
+        li.col-lg-4.col-sm-6: a href="#rpc-documentation/methods/#{name}" = name
+
     - for name, {description, params, returns} of @methods
       h4
         a name="rpc-documentation/methods/#{name}"
@@ -31,8 +42,7 @@ article#rpc-documentation
         dl.dl-horizontal
           - for param in params
             dt = param.name
-            dd
-              pre = JSON.stringify(_(param).omit("name"), null, "  ")
+            dd: pre = JSON.stringify(_(param).omit("name"), null, "  ")
       - if returns
         h5 Returns
         pre = JSON.stringify(returns, null, "  ")
@@ -40,6 +50,11 @@ article#rpc-documentation
 
   - if @notifications
     h3 <a name="rpc-documentation/notifications"></a> Notifications
+
+    ul.clearfix
+      - for name, notification of @notifications
+        li.col-lg-4.col-sm-6: a href="#rpc-documentation/notifications/#{name}" = name
+
     - for name, {description, params} of @notifications
       h4 <a name="rpc-documentation/notifications/#{name}"></a> #{name} <span class="label label-info">notification</span>
       p = description
@@ -48,6 +63,5 @@ article#rpc-documentation
         dl.dl-horizontal
           - for param in params
             dt = param.name
-            dd
-              pre = JSON.stringify(_(param).omit("name"), null, "  ")
+            dd: pre = JSON.stringify(_(param).omit("name"), null, "  ")
       hr
