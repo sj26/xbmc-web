@@ -90,13 +90,15 @@ class XBMC.Router extends Backbone.Router
     XBMC.rpc("Player.GetActivePlayers")
       .done (players) =>
         deferreds = []
-        deferreds.push XBMC.rpc("Player.GetItem", players[0].playerid, ["title", "thumbnail", "tvshowid", "showtitle", "season", "episode", "playcount", "resume"])
-        deferreds.push XBMC.rpc("Playlist.GetItems", players[0].playerid, ["title", "tvshowid", "showtitle", "season", "episode", "playcount", "resume"])
         deferreds.push XBMC.rpc("VideoLibrary.GetRecentlyAddedEpisodes", ["title", "tvshowid", "showtitle", "season", "episode", "playcount", "resume"], {start: 0, end: 10})
         deferreds.push XBMC.rpc("VideoLibrary.GetRecentlyAddedMovies", ["title", "playcount", "resume"], {start: 0, end: 10})
+        if playerid = players?[0]?.playerid
+          deferreds.push XBMC.rpc("Player.GetItem", playerid, ["title", "thumbnail", "tvshowid", "showtitle", "season", "episode", "playcount", "resume"])
+          deferreds.push XBMC.rpc("Playlist.GetItems", playerid, ["title", "tvshowid", "showtitle", "season", "episode", "playcount", "resume"])
         $.when(deferreds...)
-          .done ({item}, {items}, {episodes}, {movies}) =>
-            $(JST["home"]({item, items, episodes, movies})).appendTo(".content")
+          .done (responses...) =>
+            data = $.extend {}, responses...
+            $(JST["home"](data)).appendTo(".content")
           .then ->
             NProgress.done()
       .fail ->

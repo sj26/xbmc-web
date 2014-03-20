@@ -1,7 +1,12 @@
 .row
   .col-lg-4.col-sm-4
+    - unless @item or @items
+      .now-player
+        h3 Nothing playing
+        p.text-muted Pick something!
+
     - if @item
-      .now-playing
+      .now-playing data-item=JSON.stringify(@item)
         h3 Now Playing
         p
           img.img-thumbnail src="/image/#{encodeURIComponent(@item.thumbnail)}"
