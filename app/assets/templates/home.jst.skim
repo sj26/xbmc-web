@@ -11,7 +11,7 @@
         p
           img.img-thumbnail src="/image/#{encodeURIComponent(@item.thumbnail)}"
         p
-          - if @item.tvshowid
+          - if @item.type is "episode"
             span.text-muted #{@item.season}x#{@item.episode}
             | &nbsp;
             a href="#shows/#{@item.tvshowid}" = @item.title
@@ -20,8 +20,8 @@
               i.glyphicon.glyphicon-eye-open.text-muted title="Watched"
             br
             span.text-muted = @item.showtitle
-          - else if @item.movieid
-            a href="#movies/#{@item.movieid}" = @item.label
+          - else if @item.type is "movie"
+            a href="#movies/#{@item.id}" = @item.label
           - else
             = @item.label
 
@@ -33,7 +33,7 @@
             - for item in @items
               tr
                 td
-                  - if item.tvshowid
+                  - if item.type is "epsiode"
                     span.text-muted #{item.season}x#{item.episode}
                     | &nbsp;
                     a href="#shows/#{item.tvshowid}" = item.title
@@ -42,8 +42,8 @@
                       i.glyphicon.glyphicon-eye-open.text-muted title="Watched"
                     br
                     span.text-muted = item.showtitle
-                  - else if item.movieid
-                    a href="#movies/#{item.movieid}" = item.label
+                  - else if item.type is "movie"
+                    a href="#movies/#{item.id}" = item.label
                   - else
                     = item.label
 
