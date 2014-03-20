@@ -45,6 +45,9 @@ html
         ul.nav.navbar-nav.navbar-left
           li
             a onclick="XBMC.rpc('Player.GoTo', 1, 'previous')"
+              i.glyphicon.glyphicon-fast-backward
+          li
+            a onclick="XBMC.rpc('Player.Seek', 1, 'smallbackward')"
               i.glyphicon.glyphicon-backward
           li
             a onclick="XBMC.rpc('Player.PlayPause', 1)"
@@ -54,8 +57,11 @@ html
             a onclick="XBMC.rpc('Player.Stop', 1)"
               i.glyphicon.glyphicon-stop
           li
-            a onclick="XBMC.rpc('Player.GoTo', 1, 'next')"
+            a onclick="XBMC.rpc('Player.Seek', 1, 'smallforward')"
               i.glyphicon.glyphicon-forward
+          li
+            a onclick="XBMC.rpc('Player.GoTo', 1, 'next')"
+              i.glyphicon.glyphicon-fast-forward
 
         ul.nav.navbar-nav.navbar-right
           li
