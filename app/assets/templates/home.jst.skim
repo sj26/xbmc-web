@@ -53,11 +53,11 @@
       table.table.table-striped
         tbody
           - for episode in @episodes
-            tr
-              td
-                a.btn.btn-default.btn-xs onclick="XBMC.run('Player.Open', {episodeid: #{episode.episodeid}})"
+            tr onmouseover="this.querySelector('.context .btn-group').style.display = ''" onmouseout="this.querySelector('.context .btn-group').style.display = 'none'"
+              td.play style="vertical-align: middle"
+                a.btn.btn-default.btn-xs style="float: none" onclick="XBMC.run('Player.Open', {episodeid: #{episode.episodeid}})"
                   i.glyphicon.glyphicon-play
-              td width="100%"
+              td.title width="100%"
                 span.text-muted #{episode.season}x#{episode.episode}
                 | &nbsp;
                 a href="#shows/#{episode.tvshowid}" = episode.title
@@ -66,6 +66,12 @@
                   i.glyphicon.glyphicon-eye-open.text-muted title="Watched"
                 br
                 span.text-muted = episode.showtitle
+              td.context style="vertical-align: middle"
+                .btn-group style="display: none"
+                  .btn.btn-default.btn-xs.dropdown-toggle data-toggle="dropdown"
+                    span.caret
+                  ul.dropdown-menu role="menu"
+                    li: a onclick="XBMC.rpc('Playlist.Add', 1, {episodeid: #{episode.episodeid}})" Enqueue
 
   .col-lg-4.col-sm-4
     .latest-movies
