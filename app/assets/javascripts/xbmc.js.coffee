@@ -74,11 +74,11 @@ $(document).on
 class XBMC.Router extends Backbone.Router
   routes:
     "": "home"
-    "rpc-documentation(/*anchor)": "rpcDocumentation"
     "movies": "movies"
     "movies/:movie": "movie"
     "shows": "shows"
     "shows/:show": "show"
+    "rpc-documentation(/*anchor)": "rpcDocumentation"
 
   initialize: ->
     @on "route", (name, args) ->
@@ -101,21 +101,6 @@ class XBMC.Router extends Backbone.Router
             NProgress.done()
       .fail ->
         NProgress.done()
-
-  rpcDocumentation: (section) ->
-    if $("#rpc-documentation").length
-      anchor = ("/#{section}" if section)
-      if (a = $("a[name='rpc-documentation#{anchor}']")).length
-        $(document).scrollTop(a.offset().top)
-    else
-      $(".content").empty()
-      NProgress.start()
-      XBMC.rpcDescriptor()
-        .done (descriptor) =>
-          $(JST["rpc-documentation"](descriptor)).appendTo(".content")
-          @rpcDocumentation(section)
-        .then ->
-          NProgress.done()
 
   movies: ->
     $(".content").empty()
@@ -163,5 +148,20 @@ class XBMC.Router extends Backbone.Router
             NProgress.done()
       .fail ->
         NProgress.done()
+
+  rpcDocumentation: (section) ->
+    if $("#rpc-documentation").length
+      anchor = ("/#{section}" if section)
+      if (a = $("a[name='rpc-documentation#{anchor}']")).length
+        $(document).scrollTop(a.offset().top)
+    else
+      $(".content").empty()
+      NProgress.start()
+      XBMC.rpcDescriptor()
+        .done (descriptor) =>
+          $(JST["rpc-documentation"](descriptor)).appendTo(".content")
+          @rpcDocumentation(section)
+        .then ->
+          NProgress.done()
 
 $ -> XBMC.init()
