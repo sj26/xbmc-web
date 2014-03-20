@@ -81,7 +81,7 @@
           - for movie in @movies
             tr
               td
-                a.btn.btn-default.btn-xs onclick="XBMC.run('Player.Open', {movieid: #{movie.movieid}})"
+                a.btn.btn-default.btn-xs onclick="XBMC.rpc('Player.Open', {'movieid': #{movie.movieid}})"
                   i.glyphicon.glyphicon-play
               td width="100%"
                 a href="#movies/#{movie.movieid}" = movie.title
