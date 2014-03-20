@@ -1,4 +1,5 @@
 #= require jquery
+#= require keymaster
 #= require nprogress
 #= require underscore
 #= require backbone
@@ -20,6 +21,18 @@ $(document).on
     @router = new XBMC.Router
 
     Backbone.history.start()
+
+    key "space", (event) ->
+      event.preventDefault()
+      XBMC.rpc('Player.PlayPause', 1)
+
+    key "left", (event) ->
+      event.preventDefault()
+      XBMC.rpc('Player.Seek', 1, 'smallbackward')
+
+    key "right", (event) ->
+      event.preventDefault()
+      XBMC.rpc('Player.Seek', 1, 'smallforward')
 
   rpcDescriptor: ->
     deferred = $.Deferred()
