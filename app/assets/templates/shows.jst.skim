@@ -4,4 +4,12 @@ table.table.table-striped
     - for tvshow in @tvshows
       tr
         td
-          a href="#shows/#{tvshow.tvshowid}" = tvshow.title
+          a href="#shows/#{tvshow.tvshowid}" data-show=JSON.stringify(tvshow)
+            = tvshow.title
+          - if tvshow.episode > 0
+            - if tvshow.watchedepisodes == tvshow.episode
+              | &nbsp;
+              i.glyphicon.glyphicon-eye-open.text-muted title="Watched"
+            - else
+              | &nbsp;
+              i.glyphicon.glyphicon-asterisk.text-muted title="New"

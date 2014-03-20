@@ -125,7 +125,7 @@ class XBMC.Router extends Backbone.Router
   shows: ->
     $(".content").empty()
     NProgress.start()
-    XBMC.rpc("VideoLibrary.GetTVShows", ["title", "thumbnail"], {}, {method: "title", ignorearticle: true})
+    XBMC.rpc("VideoLibrary.GetTVShows", ["title", "thumbnail", "episode", "watchedepisodes"], {}, {method: "title", ignorearticle: true})
       .done (result) =>
         $(JST["shows"](result)).appendTo(".content")
       .then ->
