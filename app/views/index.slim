@@ -24,11 +24,21 @@ html
               a href="#shows" TV
 
           ul.nav.navbar-nav.navbar-right
-            li
-              a onclick="XBMC.rpc('AudioLibrary.Scan'); XBMC.rpc('VideoLibrary.Scan')"
-                i.glyphicon.glyphicon-refresh
-            li data-route="rpcDocumentation"
-              a href="#rpc-documentation" Docs
+            li.dropdown
+              a.dropdown-toggle href="#" data-toggle="dropdown"
+                i.glyphicon.glyphicon-cog
+                b.caret
+
+              ul.dropdown-menu
+                li
+                  a onclick="XBMC.rpc('AudioLibrary.Scan'); XBMC.rpc('VideoLibrary.Scan')"
+                    | Update Library
+                li
+                  a onclick="XBMC.rpc('AudioLibrary.Clean'); XBMC.rpc('VideoLibrary.Clean')"
+                    | Clean Library
+                li
+                  a href="#rpc-documentation"
+                    | RPC Documentation
 
     .navbar.navbar-inverse.navbar-fixed-bottom
       .container
